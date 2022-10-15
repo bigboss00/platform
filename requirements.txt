@@ -1,0 +1,5 @@
+Django 
+djangorestframework
+python-decouple
+Pillow
+drf_yasg
