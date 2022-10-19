@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.core.mail import send_mail
 from rest_framework import serializers
 
+from .tasks import send_activation_mail
+
 User = get_user_model()
 
 
@@ -21,13 +23,13 @@ class RegistrartionSerializer(serializers.Serializer):
         password1 = attrs.get('password')
         password2 = attrs.pop('password_confirm')
         if password1 != password2:
-            raise serializers.ValidationError('Passwords don\'t match')
+            raise serializers.ValidationError('Passwords do not match')
         return attrs
 
     def create(self, attrs):
         user = User.objects.create_user(**attrs)
         user.create_activation_code()
-        user.send_activation_mail()
+        send_activation_mail.delay(user.email, user.activation_code)
         return user
 
 
@@ -121,7 +123,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         pass1 = attrs.get('password')
         pass2 = attrs.get('password_confirm')
         if pass1 != pass2:
-            raise serializers.ValidationError('Passwords don\'t match')
+            raise serializers.ValidationError('Passwords do not match')
         return attrs
 
     def set_new_pass(self):

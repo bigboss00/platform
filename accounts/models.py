@@ -49,8 +49,3 @@ class User(AbstractBaseUser):
         from django.utils.crypto import get_random_string
         self.activation_code = get_random_string(6)
         self.save()
-
-    def send_activation_mail(self):
-        from django.core.mail import send_mail
-        message = f'Your activation code: {self.activation_code}'
-        send_mail('Account activation', message, 'test@test.com', [self.email])

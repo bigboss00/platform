@@ -1,0 +1,1 @@
+python3 -m celery -A platform1 worker -l info

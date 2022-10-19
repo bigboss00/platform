@@ -3,3 +3,5 @@ djangorestframework
 python-decouple
 Pillow
 drf_yasg
+Celery
+redis
